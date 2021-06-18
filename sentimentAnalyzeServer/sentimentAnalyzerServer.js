@@ -76,11 +76,49 @@ app.get("/url/sentiment", (req,res) => {
 });
 
 app.get("/text/emotion", (req,res) => {
-    return res.send({"happy":"10","sad":"90"});
-});
+      const richiesta = indirizzo.parse(req.url, true).query;
+        const analyzeOptions = {
+        'text': `${richiesta.text}`,
+        'features': {
+            'emotion': {
+                'document': true
+            }
+        }
+    }
+   
+    getNLUInstance().analyze(analyzeOptions).then(analysisResults => {
+        console.log(JSON.stringify(analysisResults.result.emotion.document.emotion));
+        return res.send(JSON.stringify(analysisResults.result.emotion.document.emotion));
+    
+    })
+        .catch(err => {
+            console.log('error:', err);
+        });
+
+   });
+
 
 app.get("/text/sentiment", (req,res) => {
-    return res.send("text sentiment for "+req.query.text);
+    const richiesta = indirizzo.parse(req.url, true).query;
+        const analyzeOptions = {
+        'text': `${richiesta.text}`,
+        'features': {
+            'sentiment': {
+                'document': true
+            }
+        }
+    }
+ getNLUInstance().analyze(analyzeOptions).then(analysisResults => {
+        
+        console.log(analysisResults.result.sentiment.document.label);
+        return res.send(analysisResults.result.sentiment.document.label);
+    
+    })
+        .catch(err => {
+            console.log('error:', err);
+        });
+    
+
 });
 
 let server = app.listen(8080, () => {
