@@ -43,8 +43,8 @@ app.get("/url/emotion", (req, res) => {
     }
    
     getNLUInstance().analyze(analyzeOptions).then(analysisResults => {
-        console.log(analysisResults.result.emotion.document.emotion);
-        return res.send(analysisResults.result.emotion.document.emotion);
+        console.log(JSON.stringify(analysisResults.result.emotion.document.emotion));
+        return res.send(JSON.stringify(analysisResults.result.emotion.document.emotion));
     
     })
         .catch(err => {
@@ -72,7 +72,7 @@ app.get("/url/sentiment", (req,res) => {
         .catch(err => {
             console.log('error:', err);
         });
-    return res.send("url sentiment for "+req.query.url);
+    
 });
 
 app.get("/text/emotion", (req,res) => {
